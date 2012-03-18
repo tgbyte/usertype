@@ -24,7 +24,7 @@
 	<artifactId>usertype.parent</artifactId>
 	<packaging>pom</packaging>
 
-	<version>1.9</version>
+	<version>1.9.1-SNAPSHOT</version>
 
 	<name>User Type for Hibernate Parent</name>
 	<description>Classes utilising JSR 310 and Joda Time that add Hibernate support</description>
@@ -78,9 +78,9 @@
 	</properties>
 	
 	<scm>
-	    <connection>scm:svn:http://usertype.svn.sourceforge.net/svnroot/usertype/tags/usertype.parent-1.9</connection>
-	    <developerConnection>scm:svn:https://usertype.svn.sourceforge.net/svnroot/usertype/tags/usertype.parent-1.9</developerConnection>
-	    <url>http://usertype.svn.sourceforge.net/viewvc/usertype/tags/usertype.parent-1.9</url>
+	    <connection>scm:svn:http://usertype.svn.sourceforge.net/svnroot/usertype/branches/1.9.x</connection>
+	    <developerConnection>scm:svn:https://usertype.svn.sourceforge.net/svnroot/usertype/branches/1.9.x</developerConnection>
+	    <url>http://usertype.svn.sourceforge.net/viewvc/usertype/branches/1.9.x</url>
   	</scm>
   	
   	<distributionManagement>

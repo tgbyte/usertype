@@ -15,8 +15,6 @@
  */
 package org.jadira.usertype.spi.shared;
 
-import java.util.Properties;
-
 import org.hibernate.cfg.Configuration;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.integrator.spi.Integrator;
@@ -25,38 +23,43 @@ import org.hibernate.service.spi.SessionFactoryServiceRegistry;
 import org.hibernate.usertype.CompositeUserType;
 import org.hibernate.usertype.UserType;
 
+import java.util.Properties;
+
 public abstract class AbstractUserTypeHibernateIntegrator implements Integrator {
 
 	private static final String REGISTER_USERTYPES_KEY = "jadira.usertype.autoRegisterUserTypes";
 
-	private static final String DEFAULT_JAVAZONE_KEY = "jadira.usertype.javaZone";	
+	private static final String DEFAULT_JAVAZONE_KEY = "jadira.usertype.javaZone";
 	private static final String DEFAULT_DATABASEZONE_KEY = "jadira.usertype.databaseZone";
 	private static final String DEFAULT_SEED_KEY = "jadira.usertype.seed";
 	private static final String DEFAULT_CURRENCYCODE_KEY = "jadira.usertype.currencyCode";
-	
+
 	public void integrate(Configuration configuration, SessionFactoryImplementor sessionFactory, SessionFactoryServiceRegistry serviceRegistry) {
-		
+
 		ConfigurationHelper.setCurrentSessionFactory(sessionFactory);
-		
-		String isEnabled = configuration.getProperty(REGISTER_USERTYPES_KEY); 
-		String javaZone = configuration.getProperty(DEFAULT_JAVAZONE_KEY);
-		String databaseZone = configuration.getProperty(DEFAULT_DATABASEZONE_KEY);
-		String seed = configuration.getProperty(DEFAULT_SEED_KEY);
-		String currencyCode = configuration.getProperty(DEFAULT_CURRENCYCODE_KEY);
-		configureDefaultProperties(sessionFactory, javaZone, databaseZone, seed, currencyCode);
-		
-		if (isEnabled != null && Boolean.valueOf(isEnabled)) {
-			autoRegisterUsertypes(configuration, isEnabled);
+		try {
+			String isEnabled = configuration.getProperty(REGISTER_USERTYPES_KEY);
+			String javaZone = configuration.getProperty(DEFAULT_JAVAZONE_KEY);
+			String databaseZone = configuration.getProperty(DEFAULT_DATABASEZONE_KEY);
+			String seed = configuration.getProperty(DEFAULT_SEED_KEY);
+			String currencyCode = configuration.getProperty(DEFAULT_CURRENCYCODE_KEY);
+			configureDefaultProperties(sessionFactory, javaZone, databaseZone, seed, currencyCode);
+
+			if (isEnabled != null && Boolean.valueOf(isEnabled)) {
+				autoRegisterUsertypes(configuration, isEnabled);
+			}
+		} finally {
+			ConfigurationHelper.setCurrentSessionFactory(null);
 		}
-	}
+		}
 
 	private void autoRegisterUsertypes(Configuration configuration, String isEnabled) {
-		
+
 		for(UserType next : getUserTypes()) {
 
 			registerType(configuration, next);
 		}
-		
+
 		for(CompositeUserType next : getCompositeUserTypes()) {
 
 			registerType(configuration, next);
@@ -76,12 +79,12 @@ public abstract class AbstractUserTypeHibernateIntegrator implements Integrator 
 		String className = type.returnedClass().getName();
 		configuration.registerTypeOverride(type, new String[] {className});
 	}
-	
+
 	private void registerType(Configuration configuration, UserType type) {
 		String className = type.returnedClass().getName();
 		configuration.registerTypeOverride(type, new String[] {className});
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -97,8 +100,8 @@ public abstract class AbstractUserTypeHibernateIntegrator implements Integrator 
 	public void disintegrate(SessionFactoryImplementor sessionFactory, SessionFactoryServiceRegistry serviceRegistry) {
 		ConfigurationHelper.configureDefaultProperties(sessionFactory, null);
 	}
-	
+
 	protected abstract CompositeUserType[] getCompositeUserTypes();
-	
+
 	protected abstract UserType[] getUserTypes();
 }

@@ -108,11 +108,10 @@ public class TestPersistentDateTimeWithZone extends DatabaseCapable {
         verifyDatabaseTable(manager, JodaDateTimeWithZoneHolder.class.getAnnotation(Table.class).name());
         
 		// Ensure use of criteria does not throw exception
-        Criteria criteria = ((Session)(manager.getDelegate())).createCriteria(JodaDateTimeWithZoneHolder.class); 
+        criteria = ((Session)(manager.getDelegate())).createCriteria(JodaDateTimeWithZoneHolder.class); 
         criteria.setCacheable(true); 
         criteria.add(Restrictions.le("dateTime.datetime", new LocalDateTime()));     
-        @SuppressWarnings({ "unused", "unchecked" })
-		List<JodaDateTimeWithZoneHolder> result = (List<JodaDateTimeWithZoneHolder>) criteria.list(); 
+		result = (List<JodaDateTimeWithZoneHolder>) criteria.list(); 
 
         manager.close();
     }
